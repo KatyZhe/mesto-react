@@ -1,9 +1,13 @@
 import React from 'react';
 
-const Card = ({ card, onCardClick }) => {
+const Card = ({ card, onCardClick, onBasketClick }) => {
 
     const handleClick = () => {
         onCardClick(card);
+    };
+
+    const handleBasketClick = () => {
+        onBasketClick(card);
     };
     
     return (
@@ -26,6 +30,7 @@ const Card = ({ card, onCardClick }) => {
                 <button
                     type="button"
                     className="element__delete"
+                    onClick={handleBasketClick}
                 />
             </div>
         </div>

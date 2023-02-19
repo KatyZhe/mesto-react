@@ -1,29 +1,20 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import Card from "./Card";
 import api from "../utils/Api.js";
 
-const Main = ({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) => {
-    const [userName, setUserName] = React.useState("");
-    const [userDescription, setUserDescription] = React.useState("");
-    const [userAvatar, setUserAvatar] = React.useState("");
-    const [cards, setCards] = React.useState([]);
+const Main = ({ onEditAvatar, onEditProfile, onAddPlace, onCardClick, onBasketClick }) => {
+    const [userName, setUserName] = useState("");
+    const [userDescription, setUserDescription] = useState("");
+    const [userAvatar, setUserAvatar] = useState("");
+    const [cards, setCards] = useState([]);
 
-    React.useEffect(() => {
-        api.getUserInfo()
-            .then((data) => {
-                setUserName(data.name);
-                setUserDescription(data.about);
-                setUserAvatar(data.avatar);
-            })
-            .catch((err) => {
-                console.log(`Ошибка: ${err}`);
-            });
-    }, []);
-
-    React.useEffect(() => {
-        api.getInitialCards()
-            .then((data) => {
-                setCards(data);
+    useEffect(() => {
+        Promise.all([api.getUserInfo(), api.getInitialCards()])
+            .then(([userData, cardData]) => {
+                setUserName(userData.name);
+                setUserDescription(userData.about);
+                setUserAvatar(userData.avatar);
+                setCards(cardData);
             })
             .catch((err) => {
                 console.log(`Ошибка: ${err}`);
@@ -71,6 +62,7 @@ const Main = ({ onEditAvatar, onEditProfile, onAddPlace, onCardClick }) => {
                             key={card._id}
                             card={card}
                             onCardClick={onCardClick}
+                            onBasketClick={onBasketClick}
                         />
                     );
                 })}
