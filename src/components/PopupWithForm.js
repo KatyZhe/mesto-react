@@ -12,8 +12,9 @@ const PopupWithForm = (props) => {
           className="popup__form"
           onSubmit={props.onSubmit}>
           {props.children}
+          <button type="submit" className="popup__button">{props.buttonText}</button>
         </form>
-        <button type="submit" className="popup__button popup__button_disabled" disabled>{props.buttonText}</button>
+        
       </div>
     </div>
   );
