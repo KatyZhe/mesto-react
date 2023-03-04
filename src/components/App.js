@@ -5,7 +5,7 @@ import Footer from "./Footer.js";
 import Main from "./Main.js";
 import ImagePopup from "./ImagePopup.js";
 import AddPlacePopup from "./AddPlacePopup.js";
-import AreYouSurePopup from "./AreYouSurePopup.js";
+import ConfirmationPopup from "./ConfirmationPopup.js";
 import EditProfilePopup from "./EditProfilePopup.js";
 import EditAvatarPopup from "./EditAvatarPopup.js";
 import api from "../utils/Api.js"
@@ -60,8 +60,12 @@ function App() {
   function handleCardLike(card) {
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
 
-    api.toggleCardLike(card._id, !isLiked).then((newCard) => {
+    api.toggleCardLike(card._id, !isLiked)
+    .then((newCard) => {
       setCards((state) => state.map((c) => (c._id === card._id ? newCard : c)));
+    })
+    .catch((err) => {
+      console.log(`Ошибка: ${err}`);
     });
   }
 
@@ -71,6 +75,7 @@ function App() {
   };
 
   function handleCardDelete(id) {
+
     api.deleteCard(id)
       .then(() => {
         setCards((cards) => cards.filter((card) => card._id !== id));
@@ -82,6 +87,7 @@ function App() {
   }
 
   function handleUpdateUser(currentUserInfo) {
+    setIsLoading(true);
     api
       .changeUserInfo(currentUserInfo)
       .then((data) => {
@@ -90,10 +96,14 @@ function App() {
       })
       .catch((err) => {
         console.log(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }
 
   function handleUpdateAvatar(data) {
+    setIsLoading(true);
     api.changeAvatar(data)
       .then((data) => {
         setCurrentUser(data);
@@ -101,6 +111,9 @@ function App() {
       })
       .catch((err) => {
         console.log(`Ошибка: ${err}`);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }
 
@@ -142,27 +155,31 @@ function App() {
             isOpen={isEditProfilePopupOpen}
             onClose={closeAllPopups}
             onUpdateUser={handleUpdateUser}
+            onLoading={isLoading}
           />
 
           <EditAvatarPopup
             isOpen={isEditAvatarPopupOpen}
             onClose={closeAllPopups}
             onUpdateAvatar={handleUpdateAvatar}
+            onLoading={isLoading}
           />
 
           <AddPlacePopup
             isOpen={isAddPlacePopupOpen}
             onClose={closeAllPopups}
             onAddPlace={handleAddPlaceSubmit}
+            onLoading={isLoading}
           />
 
           <ImagePopup card={selectedCard} onClose={closeAllPopups} />
 
-          <AreYouSurePopup
+          <ConfirmationPopup
             isOpen={isConfirmationDelete}
             onClose={closeAllPopups}
             onSubmit={handleCardDelete}
             card={removedCardId}
+            onLoading={isLoading}
           />
         </div>
       </div>

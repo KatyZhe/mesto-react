@@ -2,10 +2,10 @@ import { useContext, useEffect, useState } from "react";
 import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 import PopupWithForm from "./PopupWithForm.js";
 
-function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
+function EditProfilePopup({ isOpen, onClose, onUpdateUser, onLoading }) {
   const currentUser = useContext(CurrentUserContext);
-  const [name, setName] = useState();
-  const [description, setDescription] = useState();
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
 
   useEffect(() => {
     setName(currentUser.name);
@@ -36,7 +36,7 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
-      buttonText="Сохранить"
+      buttonText={onLoading ? "Сохранение..." : "Сохранить"}
     >
       <fieldset className="popup__input-container">
         <input

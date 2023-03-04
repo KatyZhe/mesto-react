@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import PopupWithForm from './PopupWithForm.js';
 
-function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
+function AddPlacePopup({ isOpen, onClose, onAddPlace, onLoading }) {
   const [newCard, setNewCard] = useState({ name: '', link: '' });
 
   useEffect(() => {
@@ -20,7 +20,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
-      buttonText="Сохранить"
+      buttonText={onLoading ? "Сохранение..." : "Сохранить"}
     >
       <fieldset className="popup__input-container">
         <input
@@ -28,7 +28,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
           className="popup__item popup__item_title_input"
           name="inputplacename"
           value={newCard.name}
-          onChange={(e) => setNewCard({ ...newCard, name: e.target.value })}
+          onChange={(evt) => setNewCard({ ...newCard, name: evt.target.value })}
           minLength="2"
           maxLength="30"
           placeholder="Название"
@@ -42,7 +42,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
           id="popup__linkinput"
           name="inputplacelink"
           value={newCard.link}
-          onChange={(e) => setNewCard({ ...newCard, link: e.target.value })}
+          onChange={(evt) => setNewCard({ ...newCard, link: evt.target.value })}
           placeholder="Ссылка на картинку"
           required
         />

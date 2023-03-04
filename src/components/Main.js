@@ -29,12 +29,14 @@ const Main = ({
           </button>
 
           <div className="profile__info">
-            <h1 className="profile__user-name">{name}</h1>
-            <button
-              type="button"
-              className="profile__edit-button"
-              onClick={onEditProfile}
-            ></button>
+            <div className="profile__name">
+              <h1 className="profile__user-name">{name}</h1>
+              <button
+                type="button"
+                className="profile__edit-button"
+                onClick={onEditProfile}
+              ></button>
+            </div>
             <p className="profile__user-info">{about}</p>
           </div>
         </div>

@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import PopupWithForm from "./PopupWithForm.js";
 
-function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
+function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar, onLoading }) {
   const avatarRef = useRef();
 
   function handleSubmit(evt) {
@@ -18,7 +18,7 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
-      buttonText="Сохранить"
+      buttonText={onLoading ? "Сохранение..." : "Сохранить"}
     >
       <fieldset className="popup__input-container">
         <input
