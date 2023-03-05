@@ -19,7 +19,10 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingUser, setIsLoadingUser] = useState(false);
+  const [isLoadingAvatar, setIsLoadingAvatar] = useState(false);
+  const [isLoadingPlace, setIsLoadingPlace] = useState(false);
+  const [isLoadingDelete, setIsLoadingDelete] = useState(false);
   const [removedCardId, setRemovedCardId] = useState("");
 
   useEffect(() => {
@@ -75,7 +78,7 @@ function App() {
   };
 
   function handleCardDelete(id) {
-
+    setIsLoadingDelete(true);
     api.deleteCard(id)
       .then(() => {
         setCards((cards) => cards.filter((card) => card._id !== id));
@@ -83,11 +86,13 @@ function App() {
       })
       .catch((err) => {
         console.log(`Ошибка: ${err}`);
-      });
+      }).finally(() => {
+        setIsLoadingDelete(false);
+      });;
   }
 
   function handleUpdateUser(currentUserInfo) {
-    setIsLoading(true);
+    setIsLoadingUser(true);
     api
       .changeUserInfo(currentUserInfo)
       .then((data) => {
@@ -98,12 +103,12 @@ function App() {
         console.log(err);
       })
       .finally(() => {
-        setIsLoading(false);
+        setIsLoadingUser(false);
       });
   }
 
   function handleUpdateAvatar(data) {
-    setIsLoading(true);
+    setIsLoadingAvatar(true);
     api.changeAvatar(data)
       .then((data) => {
         setCurrentUser(data);
@@ -113,12 +118,12 @@ function App() {
         console.log(`Ошибка: ${err}`);
       })
       .finally(() => {
-        setIsLoading(false);
+        setIsLoadingAvatar(false);
       });
   }
 
   const handleAddPlaceSubmit = (newData) => {
-    setIsLoading(true);
+    setIsLoadingPlace(true);
     api
       .createCard(newData)
       .then((newCard) => {
@@ -129,7 +134,7 @@ function App() {
         console.log(`Ошибка: ${err}`);
       })
       .finally(() => {
-        setIsLoading(false);
+        setIsLoadingPlace(false);
       });
   }
 
@@ -155,21 +160,21 @@ function App() {
             isOpen={isEditProfilePopupOpen}
             onClose={closeAllPopups}
             onUpdateUser={handleUpdateUser}
-            onLoading={isLoading}
+            onLoading={isLoadingUser}
           />
 
           <EditAvatarPopup
             isOpen={isEditAvatarPopupOpen}
             onClose={closeAllPopups}
             onUpdateAvatar={handleUpdateAvatar}
-            onLoading={isLoading}
+            onLoading={isLoadingAvatar}
           />
 
           <AddPlacePopup
             isOpen={isAddPlacePopupOpen}
             onClose={closeAllPopups}
             onAddPlace={handleAddPlaceSubmit}
-            onLoading={isLoading}
+            onLoading={isLoadingPlace}
           />
 
           <ImagePopup card={selectedCard} onClose={closeAllPopups} />
@@ -179,7 +184,7 @@ function App() {
             onClose={closeAllPopups}
             onSubmit={handleCardDelete}
             card={removedCardId}
-            onLoading={isLoading}
+            onLoading={isLoadingDelete}
           />
         </div>
       </div>
